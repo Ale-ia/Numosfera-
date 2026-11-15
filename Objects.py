@@ -1,21 +1,26 @@
 from abc import ABC, abstractmethod
 
 class ObjetoCombinatorio(ABC):
-    @abstractmethod
-    def descripcion(self) -> str:
-        pass
-    @abstractmethod
-    def clave(self):
-        pass
-    def __eq__(otro) -> bool:
-        pass
+    clave = 0
+    def __eq__(self, otro: object) -> bool:
+        if not isinstance(otro, ObjetoCombinatorio):
+            return False
+        return self.clave == otro.clave
 
-    class Seleccion(ObjetoCombinatorio):
-        conjunto = {}
+class Seleccion(ObjetoCombinatorio):
+    def __init__(self, elementos):
+        self.thisclave = self.clave
+        self.clave += 1
+        self.elementos = set(elementos)
 
-    class Arreglo(ObjetoCombinatorio):
-        lista = []
+class Arreglo(ObjetoCombinatorio):
+    def __init__(self, elementos):
+        self.thisclave = self.clave
+        self.clave += 1
+        self.elementos = list(elementos)
 
-    class Eleccion(ObjetoCombinatorio):
-        iterable = []
-
+class Eleccion(ObjetoCombinatorio):
+    def __init__(self):
+        self.thisclave = self.clave
+        self.clave += 1
+        self.elementos = []
