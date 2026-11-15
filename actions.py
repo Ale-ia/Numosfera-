@@ -1,3 +1,4 @@
+
 class Action:
     def propose_case(self, propuesta):
         pass

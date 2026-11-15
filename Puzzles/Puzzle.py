@@ -1,34 +1,29 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 
 class Puzzle(ABC):
-    titulo = ""
-    _pistas = []
-    intentos = 0
-    explicacion = ""
-    _respuesta = ""
-    _completado = False
 
-    def __init__(self, titulo, pistas, explicacion, respuesta):
+    def __init__(self, titulo, pistas, explicacion, respuesta, objeto):
         self.titulo = titulo
-        self.pistas = pistas
+        self._pistas = pistas
         self.intentos = 0
-        self.explicacion = explicacion
-        self.respuesta = respuesta
-        self.completado = False
+        self._explicacion = explicacion
+        self._respuesta = respuesta
+        self._objeto = objeto
+        self._completado = False
 
     @abstractmethod
-    def aplicar(accion):
+    def aplicar(self, accion):
         pass
 
     @abstractmethod
-    def estaResuelto():
+    def estaResuelto(self):
         pass
 
     @abstractmethod
-    def mostrarPista():
+    def mostrarPista(self):
         pass
 
     @abstractmethod
-    def mostrarExplicacion():
+    def mostrarExplicacion(self):
         pass
 

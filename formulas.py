@@ -1,12 +1,22 @@
 from math import factorial, comb
 
-def calcularCombinacion(n,k):
+def calcular_combinacion(n,k):
     return comb(n,k)
-def calcularPotenciacion(n,k):
+
+def calcular_potenciacion(n,k):
     return n**k
-def calcularProducto():
+
+def calcular_producto(categorias):
+    total = 1
+    for categoria in categorias:
+        if categoria <= 0:
+            return 1
+        total = total * categoria
+    return total
+    
+
+def calcular_multinomial():
     pass
-def calcularMultinomial():
-    pass
-def calcularInclusionExclusion(a,b,intersection):
+
+def calcular_inclusion_exclusion(a,b,intersection):
     return a+b-intersection
