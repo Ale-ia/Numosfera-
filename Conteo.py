@@ -1,7 +1,7 @@
 class Enumerador:
-    def generar():
+    def generar(self):
         pass
-    def cotaSuperior():
+    def cota_superior(self):
         pass
-    def contar():
+    def contar(self):
         pass
