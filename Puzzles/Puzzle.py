@@ -1,13 +1,15 @@
 from abc import ABC, abstractmethod
+import random
+
 class Puzzle(ABC):
-    def __init__(self, titulo, pistas, explicacion, respuesta, objeto):
+    def __init__(self, titulo, pistas, explicacion, objeto):
         self._titulo = titulo
         self._pistas = pistas
         self._intentos = 0
         self._pistas_usadas = 0
         self._explicacion = explicacion
         self._completado = False
-        self._respuesta = respuesta
+        self._respuesta = 0
         self.objeto = objeto
         self.opcionesContadas = set()
 

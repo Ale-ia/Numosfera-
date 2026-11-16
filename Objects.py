@@ -2,24 +2,19 @@ from abc import ABC
 class ObjetoCombinatorio(ABC):
     clave = 0
     def __eq__(self, otro: object) -> bool:
-        if not isinstance(otro, ObjetoCombinatorio):
-            return False
-        return self.clave == otro.clave
+        return type(self) is type(otro) and self.clave == otro.clave
 
 class Seleccion(ObjetoCombinatorio):
     def __init__(self, elementos):
-        self.thisclave = self.clave
-        self.clave = frozenset(elementos)
-        self.elementos = set(elementos)
+        self.elementos = frozenset(elementos)
+        self.clave = self.elementos
 
 class Arreglo(ObjetoCombinatorio):
     def __init__(self, elementos):
-        self.thisclave = self.clave
-        self.clave = tuple(elementos)
-        self.elementos = list(elementos)
+        self.elementos = tuple(elementos)
+        self.clave = self.elementos
 
 class Eleccion(ObjetoCombinatorio):
     def __init__(self, elementos):
-        self.thisclave = self.clave
-        self.clave = tuple(elementos)
-        self.elementos = list(elementos)
+        self.elementos = {elementos}
+        self.clave = self.elementos

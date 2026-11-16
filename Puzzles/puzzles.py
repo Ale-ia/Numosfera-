@@ -1,14 +1,14 @@
 
 from .Puzzle import Puzzle
-from formulas import calcular_combinacion, calcular_multinomial, calcular_potenciacion, calcular_producto
+from formulas import calcular_combinacion, calcular_multinomial, calcular_potenciacion, calcular_producto, calcular_inclusion_exclusion
 from conteo import determine_sized_subsets, determine_subsets, determine_arrangements
 
 #APRETONES(COMBINACIONES)
 
 class PuzzleApretones(Puzzle):
     
-    def __init__(self, titulo, pistas, explicacion, respuesta, objeto, subset_size=2):
-        super().__init__(titulo, pistas, explicacion, respuesta, objeto)
+    def __init__(self, titulo, pistas, explicacion, objeto, subset_size=2):
+        super().__init__(titulo, pistas, explicacion, objeto)
         self.subsetSize = subset_size
 
     def es_valida(self, entrada):
@@ -22,6 +22,7 @@ class PuzzleApretones(Puzzle):
         else:
             self.opcionesContadas.add(entrada)
             print(f"La opción {entrada} es válida y ha sido contada.")
+        self._esta_completo()
 
     def _generar_opciones(self):
         return determine_sized_subsets(self.objeto.elementos, self.subsetSize)
@@ -66,7 +67,7 @@ class PuzzleLamparas(Puzzle):
         return determine_subsets(self.objeto.elementos)
 
     def _calcular_total(self):
-        return calcular_potenciacion(len(self.objeto.elementos), 2)  # Cada lámpara tiene 2 estados: encendida o apagada
+        return calcular_potenciacion(len(2, self.objeto.elementos))  # Cada lámpara tiene 2 estados: encendida o apagada
 
     def _esta_completo(self):
         if self.opcionesContadas == self._generar_opciones():
@@ -113,17 +114,19 @@ class PuzzleDisfraces(Puzzle):
         if not self.es_valida(entrada):
             print("La opción ingresada no es válida. Asegúrate de ingresar disfraces válidos.")
         
-
     def _calcular_total(self):
         self._respuesta = calcular_producto(self.objeto)
         return calcular_producto(self.objeto)
 
     def _generar_posibilidades(self):
+        pass
 
     def _esta_resuelto(self):
         if self.opcionesContadas == self._generar_opciones():
             self._completado = True
             print("¡Felicidades! Has contado todas las opciones válidas.")
+
+#ANAGRAMAS(PERMUTACIONES)(CON REPETICION)
 
 class PuzzleAnagramas(Puzzle):
     def __init__(self, titulo, pistas, explicacion, respuesta, objeto):
@@ -148,13 +151,13 @@ class PuzzleAnagramas(Puzzle):
         self._respuesta = calcular_multinomial(len(self.objeto))
         return self._respuesta
 
-    def esta_resuelto():
+    def esta_resuelto(self):
         if self.opcionesContadas == self._generar_opciones():
             self._completado = True
             print("¡Felicidades! Has contado todas las opciones válidas.")
 
     def pedir_respuesta(self):
-        respuesta_usuario = input("Basándote en lo que has contado, ¿Cuántos anagramas posibles hay? Ingresa tu respuesta: ")
+        respuesta_usuario = int(input("Basándote en lo que has contado, ¿Cuántos anagramas posibles hay? Ingresa tu respuesta: "))
         self.registrar_intento()
         if respuesta_usuario == self._respuesta:
             print("¡Correcto!")
@@ -162,7 +165,23 @@ class PuzzleAnagramas(Puzzle):
         else:
             print("Respuesta incorrecta. Intenta de nuevo.")
 
-    class PuzzleInclusionExclusion(Puzzle):
-        def __init__(self, titulo, pistas, explicacion, respuesta, objeto1, objeto2):
-            super().__init__(titulo, pistas, explicacion, respuesta, objeto1)
-            self.objeto2 = objeto2
+#INCLUSION-EXCLUSION
+
+class PuzzleInclusionExclusion(Puzzle):
+    def __init__(self, titulo, pistas, explicacion, respuesta, objeto1, objeto2):
+        super().__init__(titulo, pistas, explicacion, respuesta, objeto1)
+        self.objeto2 = objeto2
+
+    def procesar_entrada(self, entrada):
+        pass
+
+    def pedir_respuesta(self):
+        user_input = int(input("Cuenta la cantidad de elementos de la union de los conjuntos, y escribela a continuacion:"))
+        self.registrar_intento()
+        if user_input == len(self.objeto.elementos) +  len(self.objeto2.elementos):
+            print("Revisa si estás contando más de una vez algún elemento. Inténtalo de nuevo.")
+        elif user_input == calcular_inclusion_exclusion(self.objeto.elementos, self.objeto2.elementos):
+            print("¡Correcto!")
+            self._completado = True
+        else:
+            print("Respuesta incorrecta. Intenta de nuevo.")
