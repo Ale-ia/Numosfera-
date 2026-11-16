@@ -10,7 +10,7 @@ def determine_subsets(conjunto):
     subsets = [set(s) for s in subsets]
     return subsets
 
-def determine_sized_subsets(subsetSize, conjunto):
+def determine_sized_subsets(conjunto, subsetSize):
     sizedSubsets = set()
     for element in determine_subsets(conjunto):
         if len(element) == subsetSize:

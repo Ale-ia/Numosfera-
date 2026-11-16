@@ -14,9 +14,8 @@ def calcular_producto(categorias):
         total = total * categoria
     return total
     
-
-def calcular_multinomial():
-    pass
+def calcular_multinomial(n):
+    return factorial(n)
 
 def calcular_inclusion_exclusion(a,b,intersection):
     return a+b-intersection

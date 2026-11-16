@@ -1,5 +1,4 @@
-from abc import ABC, abstractmethod
-
+from abc import ABC
 class ObjetoCombinatorio(ABC):
     clave = 0
     def __eq__(self, otro: object) -> bool:
@@ -10,17 +9,17 @@ class ObjetoCombinatorio(ABC):
 class Seleccion(ObjetoCombinatorio):
     def __init__(self, elementos):
         self.thisclave = self.clave
-        self.clave += 1
+        self.clave = frozenset(elementos)
         self.elementos = set(elementos)
 
 class Arreglo(ObjetoCombinatorio):
     def __init__(self, elementos):
         self.thisclave = self.clave
-        self.clave += 1
+        self.clave = tuple(elementos)
         self.elementos = list(elementos)
 
 class Eleccion(ObjetoCombinatorio):
-    def __init__(self):
+    def __init__(self, elementos):
         self.thisclave = self.clave
-        self.clave += 1
-        self.elementos = []
+        self.clave = tuple(elementos)
+        self.elementos = list(elementos)
