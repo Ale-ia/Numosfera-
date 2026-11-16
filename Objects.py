@@ -15,6 +15,21 @@ class Arreglo(ObjetoCombinatorio):
         self.clave = self.elementos
 
 class Eleccion(ObjetoCombinatorio):
+
     def __init__(self, elementos):
-        self.elementos = {elementos}
-        self.clave = self.elementos
+        self._pares = tuple(sorted(elementos.items()))
+        self.clave = self._pares
+    @property
+    def elementos(self):
+        return dict(self._pares)
+    @property
+    def categorias(self):
+        return tuple(categoria for categoria, opcion in self._pares)
+    def opcion_de(self, categoria):
+        return dict(self._pares)[categoria]
+    def descripcion(self):
+        return ", ".join(
+            f"{categoria}: {opcion}"
+            for categoria, opcion in self._pares
+        )
+

@@ -6,12 +6,10 @@ def calcular_combinacion(n,k):
 def calcular_potenciacion(n,k):
     return n**k
 
-def calcular_producto(categorias):
+def calcular_producto(cantidades):
     total = 1
-    for categoria in categorias:
-        if categoria <= 0:
-            return 0
-        total = total * categoria
+    for cantidad in cantidades:
+        total *= cantidad
     return total
     
 def calcular_multinomial(frecuencias):

@@ -16,3 +16,16 @@ def determine_sized_subsets(conjunto, subset_size):
 def determine_arrangements(list):
         arrangements = set(permutations(list))
         return arrangements
+
+def generar_elecciones(catalogo):
+
+    categorias = tuple(catalogo.keys())
+    opciones = [
+        catalogo[categoria]
+        for categoria in categorias
+    ]
+    for combinacion in product(*opciones):
+
+        elementos = dict(zip(categorias, combinacion))
+
+        yield Eleccion(elementos)

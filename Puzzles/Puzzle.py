@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 import random
 
 class Puzzle(ABC):
-    def __init__(self, titulo, pistas, explicacion, objeto):
+    def __init__(self, titulo, pistas, explicacion):
         self._titulo = titulo
         self._pistas = pistas
         self._intentos = 0
@@ -10,8 +10,7 @@ class Puzzle(ABC):
         self._explicacion = explicacion
         self._completado = False
         self._respuesta = 0
-        self.objeto = objeto
-        self.opcionesContadas = set()
+        self._opciones_contadas = set()
 
     def obtener_pista(self):
         return random.choice(self._pistas)
@@ -20,7 +19,7 @@ class Puzzle(ABC):
         return self._explicacion
 
     def esta_resuelto(self):
-        pass
+        return self._completado
 
     def registrar_intento(self):
         self._intentos += 1

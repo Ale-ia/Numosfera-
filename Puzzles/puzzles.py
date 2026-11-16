@@ -1,15 +1,18 @@
 
 from .Puzzle import Puzzle
+from objects import Eleccion
 from formulas import calcular_combinacion, calcular_multinomial, calcular_potenciacion, calcular_producto, calcular_inclusion_exclusion
-from conteo import determine_sized_subsets, determine_subsets, determine_arrangements
+from conteo import determine_sized_subsets, determine_subsets, determine_arrangements, generar_elecciones
 
 #APRETONES(COMBINACIONES)
 
 class PuzzleApretones(Puzzle):
     
     def __init__(self, titulo, pistas, explicacion, objeto, subset_size=2):
-        super().__init__(titulo, pistas, explicacion, objeto)
+        super().__init__(titulo, pistas, explicacion)
         self.subsetSize = subset_size
+        self.objeto = objeto
+        self._opciones_contadas = set()
 
     def es_valida(self, entrada):
         return entrada in self._generar_opciones()
@@ -17,10 +20,10 @@ class PuzzleApretones(Puzzle):
     def procesar_entrada(self, entrada):
         if not self.es_valida(entrada):
             print("La entrada no es válida.")
-        elif entrada in self.opcionesContadas:
+        elif entrada in self._opciones_contadas:
             print(f"La opción {entrada} ya había sido contada, intenta otra opción.")
         else:
-            self.opcionesContadas.add(entrada)
+            self._opciones_contadas.add(entrada)
             print(f"La opción {entrada} es válida y ha sido contada.")
         self._esta_completo()
 
@@ -31,7 +34,7 @@ class PuzzleApretones(Puzzle):
         return calcular_combinacion(len(self.objeto.elementos), self.subsetSize)
 
     def _esta_completo(self):
-        if self.opcionesContadas == self._generar_opciones():
+        if self._opciones_contadas == self._generar_opciones():
             self._completado = True
             print("¡Felicidades! Has contado todas las opciones válidas.")
 
@@ -48,7 +51,9 @@ class PuzzleApretones(Puzzle):
 
 class PuzzleLamparas(Puzzle):
     def __init__(self, titulo, pistas, explicacion, respuesta, objeto):
-        super().__init__(titulo, pistas, explicacion, respuesta, objeto)
+        super().__init__(titulo, pistas, explicacion, respuesta)
+        self.objeto = objeto
+        self._opciones_contadas = set()
 
     def es_valida(self, entrada):
         return entrada in self._generar_opciones()
@@ -57,10 +62,10 @@ class PuzzleLamparas(Puzzle):
         #print("Teniendo en cuenta las lámparas, escribe solamente las lámparas que están ENCENDIDAS. Si no quieres que hayan lámparas encendidas, simplemente no escribas nada. Recuerda separar cada lámpara con un espacio.")
         if not self.es_valida(entrada):
             print("La opción ingresada no es válida. Asegúrate de ingresar lámparas válidas.")
-        elif entrada in self.opcionesContadas:
+        elif entrada in self._opciones_contadas:
             print(f"La opción {entrada} ya había sido contada, intenta otra opción.")
         else:
-            self.opcionesContadas.add(entrada)
+            self._opciones_contadas.add(entrada)
             print(f"La opción {entrada} es válida y ha sido contada.")
 
     def _generar_opciones(self):
@@ -70,7 +75,7 @@ class PuzzleLamparas(Puzzle):
         return calcular_potenciacion(len(2, self.objeto.elementos))  # Cada lámpara tiene 2 estados: encendida o apagada
 
     def _esta_completo(self):
-        if self.opcionesContadas == self._generar_opciones():
+        if self._opciones_contadas == self._generar_opciones():
             self._completado = True
             print("¡Felicidades! Has contado todas las opciones válidas.")
 
@@ -86,40 +91,49 @@ class PuzzleLamparas(Puzzle):
 #DISFRACES(PRODUCTO)
 
 class PuzzleDisfraces(Puzzle):
-    def __init__(self, titulo, pistas, explicacion, respuesta, objeto, ):
-        super().__init__(titulo, pistas, explicacion, respuesta, objeto)
-        self.objeto = {
-        "camisa": ["roja", "azul"],
-        "pantalon": ["negro", "blanco"],
-        "zapatos": ["tenis", "botas"]
-        }
+    def __init__(self, titulo, pistas, explicacion, catalogo):
+        super().__init__(titulo, pistas, explicacion)
+        self._catalogo = {}
+        for categoria, opciones in catalogo.items():
+            opciones = tuple(opciones)
+            self._catalogo[categoria] = opciones
+
+        self._opciones_contadas = set()
+        self._total = self._calcular_total()
 
     def es_valida(self, entrada):
-        camiseta = False
-        pantalon = False
-        zapatos = False
-        for opcion in entrada:
-            if not camiseta:
-                if opcion in self.objeto["camisa"]:
-                    camiseta = True
-            if not pantalon:
-                if opcion in self.objeto["pantalon"]:
-                    pantalon = True
-            if not zapatos:
-                if opcion in self.objeto["zapatos"]:
-                    zapatos = True
-        return camiseta and pantalon and zapatos
+        propuesta = entrada.elementos
+
+        # Debe elegir exactamente una opción por categoría.
+        if set(propuesta.keys()) != set(self._catalogo.keys()):
+            return False
+
+        # Cada opción debe pertenecer a su categoría.
+        for categoria, opcion in propuesta.items():
+
+            if opcion not in self._catalogo[categoria]:
+                return False
+
+        return True
 
     def procesar_entrada(self, entrada):
         if not self.es_valida(entrada):
-            print("La opción ingresada no es válida. Asegúrate de ingresar disfraces válidos.")
+            print("La opción ingresada no es válida. Asegúrate de ingresar outfits válidos.")
+        if entrada.clave in self._opciones_contadas:
+            print(f"La opción {entrada} ya había sido contada, intenta otra opción.")
+        else:
+            self._opciones_contadas.add(entrada)
+            print(f"La opción {entrada} es válida y ha sido contada.") 
         
     def _calcular_total(self):
-        self._respuesta = calcular_producto(self.objeto)
-        return calcular_producto(self.objeto)
+        cantidades = [
+            len(opciones)
+            for opciones in self._catalogo.values()
+        ]
+        return calcular_producto(cantidades)
 
     def _generar_posibilidades(self):
-        pass
+        return tuple(generar_elecciones(self._catalogo))
 
     def _esta_resuelto(self):
         if self.opcionesContadas == self._generar_opciones():
