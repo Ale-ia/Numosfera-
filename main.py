@@ -1,30 +1,51 @@
 
-from Puzzles.puzzles import PuzzleApretones
-from objects import Seleccion
-from conteo import determine_sized_subsets
+from Puzzles.puzzles import PuzzleDisfraces
+from objects import Seleccion, Eleccion, Arreglo
+from conteo import generar_elecciones
 
-objeto1 = Seleccion(("Ana", "Beto", "Carmen"))
-puzzle1 = PuzzleApretones("Apretones de manos", ["Pista 1", "Pista 2"], "Explicación del puzzle", "3", objeto1)
+catalogo = {
+    "camisa": ["roja", "azul"],
+    "pantalon": ["negro", "blanco"],
+    "zapatos": ["tenis", "botas"]
+}
 
-opcionesContadas = set()
+puzzle = PuzzleDisfraces(
+    "Disfraces",
+    ["Prueba combinar una opción de cada categoría."],
+    "Cada atuendo se construye escogiendo una opción por categoría.",
+    catalogo
+)
 
-def compararOpcionesContadas(opcion):
-    global opcionesContadas
+print(puzzle.total)
+# 8
 
-    if opcion in opcionesContadas:
-        print(f"La opción {opcion} ya había sido contada, intenta otra opción.")
-    elif opcion in determine_sized_subsets(2, objeto1.elementos):
-        opcionesContadas.add(opcion)
-        print(f"La opción {opcion} es válida y ha sido contada.")
+eleccion1 = Eleccion({
+    "camisa": "roja",
+    "pantalon": "negro",
+    "zapatos": "tenis"
+})
 
-print("Bienvenido al puzzle de Apretones de manos.")
-print("Dado el grupo de personas Ana, Beto y Carmen, ¿cuántos apretones de manos se pueden dar?")
-print("Ingresa un apretón de manos separado por un espacio para contarlo, por ejemplo: Ana Beto\n")
+eleccion2 = Eleccion({
+    "camisa": "roja",
+    "pantalon": "negro",
+    "zapatos": "tenis"
+})
 
-while len(opcionesContadas) < 3:
-    user_input = set(input().split())
-    compararOpcionesContadas(frozenset(user_input))
-    print("Llevas contadas las siguientes opciones válidas:", opcionesContadas)
+eleccion3 = Eleccion({
+    "camisa": "verde",
+    "pantalon": "negro",
+    "zapatos": "tenis"
+})
 
-print("¡Felicidades! Has contado todas las opciones válidas.")
+print(puzzle.procesar_entrada(eleccion1))
+# NUEVA
+
+print(puzzle.procesar_entrada(eleccion2))
+# REPETIDA
+
+print(puzzle.procesar_entrada(eleccion3))
+# INVALIDA
+
+for eleccion in puzzle._generar_posibilidades():
+    print(eleccion.descripcion())
      

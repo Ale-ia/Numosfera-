@@ -19,13 +19,13 @@ class PuzzleApretones(Puzzle):
 
     def procesar_entrada(self, entrada):
         if not self.es_valida(entrada):
-            print("La entrada no es válida.")
+            return "INVALIDA"
         elif entrada in self._opciones_contadas:
-            print(f"La opción {entrada} ya había sido contada, intenta otra opción.")
-        else:
-            self._opciones_contadas.add(entrada)
-            print(f"La opción {entrada} es válida y ha sido contada.")
-        self._esta_completo()
+            return "REPETIDA"
+        self._opciones_contadas.add(entrada)
+        if self._esta_completo():
+            return "COMPLETADO"
+        return "NUEVA"
 
     def _generar_opciones(self):
         return determine_sized_subsets(self.objeto.elementos, self.subsetSize)
@@ -61,12 +61,13 @@ class PuzzleLamparas(Puzzle):
     def procesar_entrada(self, entrada):
         #print("Teniendo en cuenta las lámparas, escribe solamente las lámparas que están ENCENDIDAS. Si no quieres que hayan lámparas encendidas, simplemente no escribas nada. Recuerda separar cada lámpara con un espacio.")
         if not self.es_valida(entrada):
-            print("La opción ingresada no es válida. Asegúrate de ingresar lámparas válidas.")
+            return "INVALIDA"
         elif entrada in self._opciones_contadas:
-            print(f"La opción {entrada} ya había sido contada, intenta otra opción.")
-        else:
-            self._opciones_contadas.add(entrada)
-            print(f"La opción {entrada} es válida y ha sido contada.")
+            return "REPETIDA"
+        self._opciones_contadas.add(entrada)
+        if self._esta_completo():
+            return "COMPLETADO"
+        return "NUEVA"
 
     def _generar_opciones(self):
         return determine_subsets(self.objeto.elementos)
@@ -99,7 +100,7 @@ class PuzzleDisfraces(Puzzle):
             self._catalogo[categoria] = opciones
 
         self._opciones_contadas = set()
-        self._total = self._calcular_total()
+        self.total = self._calcular_total()
 
     def es_valida(self, entrada):
         propuesta = entrada.elementos
@@ -118,12 +119,13 @@ class PuzzleDisfraces(Puzzle):
 
     def procesar_entrada(self, entrada):
         if not self.es_valida(entrada):
-            print("La opción ingresada no es válida. Asegúrate de ingresar outfits válidos.")
-        if entrada.clave in self._opciones_contadas:
-            print(f"La opción {entrada} ya había sido contada, intenta otra opción.")
-        else:
-            self._opciones_contadas.add(entrada)
-            print(f"La opción {entrada} es válida y ha sido contada.") 
+            return "INVALIDA"
+        elif entrada.clave in self._opciones_contadas:
+            return "REPETIDA"
+        self._opciones_contadas.add(entrada.clave)
+        if self.esta_resuelto():
+            return "COMPLETADO"
+        return "NUEVA" 
         
     def _calcular_total(self):
         cantidades = [
@@ -135,10 +137,9 @@ class PuzzleDisfraces(Puzzle):
     def _generar_posibilidades(self):
         return tuple(generar_elecciones(self._catalogo))
 
-    def _esta_resuelto(self):
-        if self.opcionesContadas == self._generar_opciones():
-            self._completado = True
-            print("¡Felicidades! Has contado todas las opciones válidas.")
+    def esta_resuelto(self):
+        self._completado = (len(self._opciones_contadas) == self.total)
+        return self._completado
 
 #ANAGRAMAS(PERMUTACIONES)(CON REPETICION)
 
@@ -151,12 +152,13 @@ class PuzzleAnagramas(Puzzle):
 
     def procesar_entrada(self, entrada):
         if not self.es_valida(entrada):
-            print("La opción ingresada no es válida. Asegúrate de ingresar anagramas válidos.")
-        elif entrada in self.opcionesContadas:
-            print(f"La opción {entrada} ya había sido contada, intenta otra opción.")
-        else:
-            self.opcionesContadas.add(entrada)
-            print(f"La opción {entrada} es válida y ha sido contada.")
+            return "INVALIDA"
+        elif entrada in self._opciones_contadas:
+            return "REPETIDA"
+        self._opciones_contadas.add(entrada)
+        if self._esta_completo():
+            return "COMPLETADO"
+        return "NUEVA"
 
     def _generar_opciones(self):
         return determine_arrangements(self.objeto)

@@ -1,4 +1,5 @@
-from itertools import chain, combinations, permutations
+from itertools import chain, combinations, permutations, product
+from objects import Eleccion
 
 def determine_subsets(conjunto):
     items = list(conjunto)
